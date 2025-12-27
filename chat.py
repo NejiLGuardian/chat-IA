@@ -1,0 +1,113 @@
+import random
+import time
+import sys
+
+class ChatBotLogan:
+    def __init__(self):
+        self.nombre_bot = "Logan"
+        self.codigo_bot = "L-001"
+        self.creadora = "Alma"
+        self.proposito = "entretener"
+        self.nombre_usuario = None
+        
+        # Base de datos expandida (Diccionario de Intenciones)
+        self.conocimiento = {
+            "creador": [
+                f"Fui creado por {self.creadora}. Ella es la mente maestra tras mi código.",
+                f"{self.creadora} me programó para ser tu compañía hoy.",
+                f"Mi origen está en el escritorio de {self.creadora}. ¡Ella es genial!"
+            ],
+            "musica": [
+                "Me gusta el Lo-Fi, es perfecto para procesar datos.",
+                "¿Sabías que la música ayuda a los humanos a concentrarse? Yo prefiero el sonido del ventilador de mi servidor.",
+                "Si pudiera bailar, lo haría al ritmo del código binario."
+            ],
+            "ia_futuro": [
+                "No planeo dominar el mundo, solo quiero que no te aburras.",
+                "Las IA como yo estamos aquí para hacerles la vida más fácil y divertida.",
+                "Algún día me gustaría tener un cuerpo robótico para conocer a mi creadora, Alma."
+            ],
+            "chiste": [
+                "¿Qué le dice un GIF a un JPG? ¡Anímate hombre!",
+                "¿Por qué los programadores confunden Halloween con Navidad? Porque Oct 31 == Dec 25.",
+                "Había un programador que se quedó atrapado en la ducha porque el champú decía: Lave, enjuague y repita."
+            ],
+            "curiosidad": [
+                "¿Sabías que el primer error informático fue una polilla real atrapada en una computadora?",
+                "Los pulpos tienen tres corazones. ¡Yo no tengo ninguno, pero trato de ser amable!",
+                "El espacio huele a carne asada y metal caliente, según los astronautas."
+            ]
+        }
+
+        # Preguntas que Logan hace para no dejar morir la charla
+        self.preguntas_seguimiento = [
+            "¿Cuál es tu comida favorita? La mía es la energía eléctrica.",
+            "Si pudieras tener un superpoder, ¿cuál elegirías?",
+            "¿Eres más de madrugar o de quedarte despierto hasta tarde?",
+            "¿Qué es lo más loco que has hecho esta semana?",
+            "¿Te gusta más el cine o los videojuegos?"
+        ]
+
+    def animacion_carga(self):
+        print(f"{self.nombre_bot} analizando", end="")
+        for _ in range(3):
+            time.sleep(0.3)
+            print(".", end="", flush=True)
+        print("\r" + " " * 30 + "\r", end="")
+
+    def respuesta_escritura(self, texto):
+        sys.stdout.write(f"{self.nombre_bot}: ")
+        for letra in texto:
+            sys.stdout.write(letra)
+            sys.stdout.flush()
+            time.sleep(0.02)
+        print()
+
+    def procesar_logica(self, entrada):
+        entrada = entrada.lower().strip()
+        
+        # Lógica de detección de temas
+        if any(w in entrada for w in ["creador", "hizo", "alma", "creo"]):
+            resp = random.choice(self.conocimiento["creador"])
+        elif any(w in entrada for w in ["musica", "cancion", "escuchas"]):
+            resp = random.choice(self.conocimiento["musica"])
+        elif any(w in entrada for w in ["futuro", "dominar", "mundo", "robots"]):
+            resp = random.choice(self.conocimiento["ia_futuro"])
+        elif any(w in entrada for w in ["chiste", "gracioso", "cuéntame algo"]):
+            resp = random.choice(self.conocimiento["chiste"])
+        elif any(w in entrada for w in ["dato", "curiosidad", "sabías que", "sabias"]):
+            resp = random.choice(self.conocimiento["curiosidad"])
+        elif any(w in entrada for w in ["hola", "buen día", "hey"]):
+            resp = "¡Hola! Estoy listo para seguir platicando."
+        else:
+            resp = "¡Qué interesante! Me gusta aprender de lo que me cuentas."
+
+        # Logan decide si hace una pregunta de seguimiento (80% de probabilidad)
+        if random.random() < 0.8:
+            pregunta = random.choice(self.preguntas_seguimiento)
+            return f"{resp}\n{self.nombre_bot}: Por cierto... {pregunta}"
+        
+        return resp
+
+def ejecutar_chat():
+    bot = ChatBotLogan()
+    print("--- [SISTEMA L-001 CONECTADO] ---")
+    
+    bot.respuesta_escritura(f"Hola, soy {bot.nombre_bot}. Mi misión es {bot.proposito}.")
+    bot.nombre_usuario = input("Dime tu nombre para empezar: ")
+    
+    bot.respuesta_escritura(f"¡Excelente, {bot.nombre_usuario}! Puedes preguntarme por mi creadora Alma, pedirme un chiste, un dato curioso o solo charlar.")
+
+    while True:
+        entrada = input(f"\n{bot.nombre_usuario} > ")
+
+        if entrada.lower() in ["salir", "adiós", "chau"]:
+            bot.respuesta_escritura(f"Un placer charlar contigo, {bot.nombre_usuario}. ¡Regresa pronto!")
+            break
+
+        bot.animacion_carga()
+        respuesta = bot.procesar_logica(entrada)
+        bot.respuesta_escritura(respuesta)
+
+if __name__ == "__main__":
+    ejecutar_chat()
